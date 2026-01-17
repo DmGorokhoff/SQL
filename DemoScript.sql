@@ -1,6 +1,3 @@
---Скрипт хранится по адресу:
---C:\Users\internet\AppData\Roaming\DBeaverData\workspace6\General\Scripts\Script-5.sql
-
 -- обзор таблицы
 SELECT *
 FROM Album;
@@ -357,3 +354,4 @@ AND a.Title LIKE '%W%'
 SELECT*, count(artistid) OVER w AS c, sum(artistid) OVER w AS s
 FROM Album 
 	WINDOW w AS (PARTITION BY artistid);
+
