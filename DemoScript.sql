@@ -351,7 +351,29 @@ WHERE a2.Name LIKE 'A%'
 AND a.Title LIKE '%W%'
 
 --вычисление нескольких оконных функции
-SELECT*, count(artistid) OVER w AS c, sum(artistid) OVER w AS s
+SELECT*
+	, count(artistid) OVER w AS c
+	, sum(artistid) OVER w AS s
 FROM Album 
 	WINDOW w AS (PARTITION BY artistid);
 
+--ABC анализ
+WITH base_tab AS (
+SELECT *
+	, sum(sT) OVER(ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS sumResult
+	, sum(sT) over() AS T
+	, sum(sT) OVER(ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)/sum(sT) over() AS _prev
+FROM (
+SELECT BillingCountry, sum(i.Total) AS sT
+FROM Invoice i 
+GROUP BY BillingCountry 
+ORDER BY 2 DESC
+)
+)
+SELECT BillingCountry, sT,
+CASE  
+	WHEN round(_prev, 2) < 0.71 THEN '70%'
+	WHEN round(_prev, 2) < 0.91 THEN '20%'
+	ELSE '10%'
+	END AS abc
+FROM base_tab;
