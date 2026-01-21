@@ -375,5 +375,5 @@ CASE
 	WHEN round(_prev, 2) < 0.71 THEN '70%'
 	WHEN round(_prev, 2) < 0.91 THEN '20%'
 	ELSE '10%'
-	END AS abc
+END AS abc
 FROM base_tab;
